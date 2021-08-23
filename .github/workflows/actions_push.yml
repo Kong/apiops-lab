@@ -1,0 +1,22 @@
+name: Apply generated configuration to local Kong gateway and update API documentation
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy_to_kong:
+    runs-on: self-hosted
+    name: Apply generated configuration to local Kong gateway and update API documentation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Kong declarative configuration from Spec
+        run: inso generate config ./openapi/orders.yaml --type declarative > kong.yaml
+      - name: Validate Kong declarative configuration
+        run: deck validate
+      - name: Deploy declarative config
+        run: deck sync
+      - name: Publish Spec to Dev Portal
+        run: cd ./openapi && http --check-status --ignore-stdin PUT :8001/default/files/specs/orders.yaml contents=@orders.yaml'

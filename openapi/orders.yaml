@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: Pizza Order API
+  license:
+    name: Apache 2.0
+  description: 'Pizza ordering API Demo for today'
+  contact:
+    name: Kong
+servers:
+  - url: 'http://mockbin.org/request'
+    description: mockbin
+paths:    
+  '/v1/order/{id}':
+    get:
+      summary: Fetches an order
+      tags:
+        - order
+      x-kong-plugin-mocking:
+        enabled: true
+        config:
+          api_specification_filename: orders.yaml     
+      responses:
+        '200':
+          description: Order object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+              examples:
+                response:
+                  value:
+                    {
+                      "id": "1",
+                      "name": "Joe Johnson",
+                      "address": "123 W. Division St.",
+                      "address2": "Apt 20E",
+                      "city": "Chicago",
+                      "pizzas":[
+                        {
+                          "description": "Large, all pepperoni, mushroom. Half onion",
+                          "size": "L",
+                          "toppings": [
+                            {"side": "B", "code": "P"},
+                            {"side": "B", "code": "M"},
+                            {"side": "R", "code": "O"},
+                            {"side": "R", "code": "S"}
+                        ]                        
+                        },
+                        {
+                          "description": "Small, all mushroom and spinach",
+                          "size": "S",
+                          "toppings":[
+                            {"side": "B", "code": "M"},
+                            {"side": "B", "code": "SP"} 
+                          ]                           
+                        }
+                      ]
+                    }          
+      description: "Fetch an order"
+      parameters:
+        - schema:
+            type: string
+            default: "123"
+          name: id
+          in: path
+          required: true
+          description: This is the order id
+          example: "123"
+components:
+  schemas:
+    Topping:
+      properties:
+        side:
+          type: string
+          enum:
+          - L
+          - R
+          - B
+        code:
+          type: string
+          enum:
+          - P
+          - S
+          - SP
+          - M
+          - O
+          - GP
+    Pizza:
+      properties:
+        description:
+          type: string
+        size:
+          type: string
+          enum:
+          - S
+          - M 
+          - L
+          - XL
+        toppings:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Topping"
+    Pizzas:
+      type: array
+      items:
+        $ref: "#/components/schemas/Pizza"
+    Order:
+      required:
+      - id
+      - name
+      - address
+      - city
+      - pizzas
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        pizzas:
+          type: Pizzas
+    Orders:
+      type: array
+      items:
+        $ref: "#/components/schemas/Order"

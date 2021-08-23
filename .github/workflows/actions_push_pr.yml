@@ -1,0 +1,18 @@
+name: Action on Pull Request to generate Kong Config from Spec and Validate it
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy_to_kong:
+    runs-on: self-hosted
+    name: Generate Kong config from Spec and Validate config
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Kong declarative configuration from Spec
+        run: inso generate config ./openapi/orders.yaml --type declarative
+      - name: Validate Kong declarative configuration
+        run: deck validate
