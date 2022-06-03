@@ -1,4 +1,4 @@
-name: Action on Pull Request to generate Kong Config from Spec and Validate it
+name: testing1223nagendra
 
 on:
   pull_request:
