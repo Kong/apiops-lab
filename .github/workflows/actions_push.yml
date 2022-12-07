@@ -15,7 +15,9 @@ jobs:
       - name: Generate Kong declarative configuration from Spec
         run: inso generate config ./openapi/orders.yaml --type declarative > kong2.x.yaml
       - name: Convert configuration for 3.0
-        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong2.x.yaml --output-file kong3.x.yaml
+        run: deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong2.x.yaml --output-file kong3-b.x.yaml
+      - name: fix temporary regex issue 
+        run: sed 's/\\//' kong3-b.x.yaml > kong3.x.yaml
       - name: Validate Kong declarative configuration
         run: deck validate -s kong3.x.yaml
       - name: Deploy declarative config
