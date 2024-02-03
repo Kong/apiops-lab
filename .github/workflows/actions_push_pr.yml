@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy_to_kong:
+    timeout-minutes: ${{ fromJSON(vars.GHA_DEFAULT_TIMEOUT) }}
     runs-on: self-hosted
     name: Generate Kong config from Spec and Validate config
     steps:
