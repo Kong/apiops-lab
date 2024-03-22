@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  deploy_to_kong:
+  deploy_to_kong:test
     runs-on: self-hosted
     name: Apply generated configuration to local Kong gateway and update API documentation
     steps:
