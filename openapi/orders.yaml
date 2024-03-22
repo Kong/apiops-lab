@@ -124,7 +124,7 @@ components:
         city:
           type: string
         pizzas:
-          type: Pizzas
+          $ref: '#/components/schemas/Pizzas'
     Orders:
       type: array
       items:
